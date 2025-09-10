@@ -1,0 +1,61 @@
+{
+  "title": "Home Internet SLO Monitor",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Latency p95 (s)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(app_request_latency_bucket[5m])) by (le))"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Jitter (ms)",
+      "targets": [
+        {
+          "expr": "avg_over_time(app_jitter_ms[5m])/1"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Packet Loss (%)",
+      "targets": [
+        {
+          "expr": "avg_over_time(app_packet_loss_pct[5m])"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Throughput (Mbit/s)",
+      "targets": [
+        {
+          "expr": "avg_over_time(app_throughput_mbps[5m])"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Anomaly Score",
+      "targets": [
+        {
+          "expr": "avg_over_time(app_anomaly_score[5m])"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Tickets (last 7d)",
+      "targets": [
+        {
+          "expr": "increase(app_ticket_created_total[7d])"
+        }
+      ]
+    }
+  ]
+}

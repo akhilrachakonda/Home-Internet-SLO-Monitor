@@ -1,0 +1,7 @@
+global: {}
+route:
+  receiver: webhooker
+receivers:
+- name: webhooker
+  webhook_configs:
+  - url: http://app:8000/alert

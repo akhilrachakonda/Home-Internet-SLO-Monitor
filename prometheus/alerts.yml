@@ -1,0 +1,11 @@
+groups:
+- name: slo-latency
+  rules:
+  - alert: HighP95Latency
+    expr: histogram_quantile(0.95, sum(rate(app_request_latency_bucket[5m])) by (le)) > 0.07
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "p95 latency over 70ms for 5m"
+      description: "User-facing p95 exceeded SLO threshold"
