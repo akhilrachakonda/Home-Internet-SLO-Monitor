@@ -6,6 +6,24 @@
     {
       "type": "timeseries",
       "title": "Latency p95 (s)",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green" },
+              { "color": "red", "value": 0.07 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "single" },
+        "thresholdsStyle": { "mode": "line" }
+      },
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(app_request_latency_bucket[5m])) by (le))"
@@ -42,6 +60,25 @@
     {
       "type": "timeseries",
       "title": "Anomaly Score",
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green" },
+              { "color": "red", "value": 0.65 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "single" },
+        "thresholdsStyle": { "mode": "line" }
+      },
       "targets": [
         {
           "expr": "avg_over_time(app_anomaly_score[5m])"
@@ -56,6 +93,26 @@
           "expr": "increase(app_ticket_created_total[7d])"
         }
       ]
+    }
+    ,
+    {
+      "type": "timeseries",
+      "title": "Active Prometheus Alerts",
+      "targets": [
+        { "expr": "sum(ALERTS{alertstate=\"firing\"})" }
+      ]
+    }
+    ,
+    {
+      "type": "logs",
+      "title": "App Logs (Loki)",
+      "targets": [
+        {
+          "expr": "{job=\"app\"}",
+          "datasource": { "type": "loki", "uid": "loki" }
+        }
+      ],
+      "options": { "showTime": true, "wrapLogMessage": true }
     }
   ]
 }

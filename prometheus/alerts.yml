@@ -9,3 +9,14 @@ groups:
     annotations:
       summary: "p95 latency over 70ms for 5m"
       description: "User-facing p95 exceeded SLO threshold"
+
+- name: anomaly-score
+  rules:
+  - alert: HighAnomalyScore
+    expr: avg_over_time(app_anomaly_score[5m]) > 0.65
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Anomaly score high (>0.65) for 2m"
+      description: "The model detected anomalous behavior in the last 5 minutes."

@@ -1,0 +1,44 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: SLO Contact Point
+    receivers:
+      - uid: slo_webhook
+        type: webhook
+        settings:
+          url: http://app:8000/alert
+          httpMethod: POST
+          maxAlerts: 0
+          httpHeaderName1: X-From
+          httpHeaderValue1: grafana
+      - uid: slo_email
+        type: email
+        settings:
+          addresses: "akhilrachakonda2004@yahoo.com"
+          singleEmail: true
+  - orgId: 1
+    name: SLO Email Only
+    receivers:
+      - uid: slo_email_only
+        type: email
+        settings:
+          addresses: "akhilrachakonda2004@yahoo.com"
+          singleEmail: true
+
+policies:
+  - orgId: 1
+    receiver: SLO Contact Point
+    group_by: ["alertname"]
+    group_wait: 10s
+    group_interval: 5m
+    repeat_interval: 4h
+    routes:
+      - receiver: SLO Email Only
+        object_matchers:
+          - ["alertname", "=", "Email Test (Grafana)"]
+        group_wait: 5s
+        group_interval: 1m
+        repeat_interval: 1m
+      - receiver: SLO Contact Point
+        object_matchers:
+          - ["folder", "=", "SLO Monitor"]

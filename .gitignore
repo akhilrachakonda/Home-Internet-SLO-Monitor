@@ -1,0 +1,25 @@
+# OS junk
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+app/.venv/
+
+# Local env
+.env
+
+# Logs & runtime artifacts
+app/app.log
+logs/
+
+# Generated tickets & reports
+tickets/
+reports/
+app/tickets/
+app/reports/
+
+# Loki data volume
+loki-data/
+

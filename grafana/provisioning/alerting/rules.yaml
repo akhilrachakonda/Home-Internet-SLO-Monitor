@@ -1,0 +1,97 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: SLO Alerts
+    folder: SLO Monitor
+    interval: 1m
+    rules:
+      - uid: high_p95_latency_grafana
+        title: High p95 latency (Grafana)
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            relativeTimeRange:
+              from: 300
+              to: 0
+            model:
+              expr: histogram_quantile(0.95, sum(rate(app_request_latency_bucket[5m])) by (le))
+              instant: false
+              interval: ""
+              legendFormat: "p95"
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - reducer:
+                    type: last
+                  evaluator:
+                    type: gt
+                    params: [0.07]
+                  query:
+                    params: [B]
+                  operator:
+                    type: and
+              refId: C
+        for: 5m
+        annotations:
+          summary: p95 latency > 70ms for 5m (Grafana)
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: email_test_grafana
+        title: Email Test (Grafana)
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            relativeTimeRange:
+              from: 300
+              to: 0
+            model:
+              expr: vector(1)
+              instant: false
+              interval: ""
+              legendFormat: "one"
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - reducer:
+                    type: last
+                  evaluator:
+                    type: gt
+                    params: [0]
+                  query:
+                    params: [B]
+                  operator:
+                    type: and
+              refId: C
+        for: 30s
+        annotations:
+          summary: Test alert from Grafana
+          description: This alert always fires to validate email delivery.
+        labels:
+          severity: info
+        isPaused: true

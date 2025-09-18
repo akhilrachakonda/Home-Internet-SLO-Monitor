@@ -3,8 +3,12 @@ WORKDIR /app
 
 # Add ping + iperf3 inside the container
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	iputils-ping iperf3 && \
-	rm -rf /var/lib/apt/lists/*
+    iputils-ping iperf3 \
+    libgomp1 \
+  && rm -rf /var/lib/apt/lists/*
+
+# Ensure headless plotting works reliably
+ENV MPLBACKEND=Agg
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt

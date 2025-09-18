@@ -1,3 +1,6 @@
+import matplotlib
+# Force non-interactive backend in headless containers
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pathlib import Path
 
