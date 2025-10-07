@@ -51,6 +51,12 @@ You can send a test from Grafana → Alerting → Contact points → Test.
 - Grafana folder “SLO Monitor” → “Home Internet SLO Monitor” dashboard
 - Logs: Grafana → Explore → Loki → query `{job="app"}`
 
+### Sample Results
+- Grafana dashboard panels (p95 latency, jitter, loss, throughput, anomaly score, ticket counter).  
+  ![Grafana SLO dashboard](docs/images/grafana-dashboard.png)
+- Control panel showing service health, latest probe snapshot, and quick links into Grafana, Prometheus, Alertmanager, and logs.  
+  ![FastAPI control panel](docs/images/ui-control-panel.png)
+
 ### Alerts
 - Prometheus (Alertmanager → webhook `/alert`):
   - HighP95Latency: `histogram_quantile(0.95, …) > 0.07` for 5m
